@@ -15,37 +15,19 @@ const thoughtSchema = new mongoose.Schema({
         // getter to format the timestamp on query
         return new Date(timestamp).toISOString();
       },
-    },
-    username: {
+    }, //todo: populate sub-document for user
+    username: { //* Mongoose will replace the author field in the result with the actual user document, making it much more convenient to work with the data. Without populating, the author field in the post document would only contain the _id of the user, not the full user document.
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    //reactions: [reactionSchema], // Array of nested reaction documents
+    // reactions: [reactionSchema], // Array of nested reaction documents
   });
 
 const Thought = mongoose.model('Thought', thoughtSchema);
 
 const handleError = (err) => console.error(err);
 
-//test seed purposes only
-// User.findOne({ username: 'Noah' })
-//   .then((user) => {
-//     if (!user) {
-//       console.error('User not found.');
-//       return;
-//     }
-
-//     // Create a new Thought with the correct user reference
-//     Thought
-//       .create({
-//         thoughtText: 'This is a very special thought.',
-//         username: user._id, // Use the ObjectId of the user
-//       })
-//       .then(result => console.log('Created new thought', result))
-//       .catch(err => handleError(err));
-//   })
-//   .catch(err => handleError(err));
 
 //todo: Create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query.
 
