@@ -78,32 +78,32 @@ connection.once('open', async () => {
   }
 
   // new array to hold insertion values
-    const users = [];
-    const thoughts = [];
+    // const users = [];
+    // const thoughts = [];
 
   //users
-    for (let i = 0; i < randomUsernames.length; i++) {
-        const username = randomUsernames[i];
-        const email = `${randomUsernames[i]}@example.com`;
-        users.push({
-            username,
-            email
-        })
-    }
+  const users = randomUsernames.map((username) => {
+    return {
+      username,
+      email: `${username}@example.com`,
+    };
+  });
+  await User.collection.insertMany(users);
 
     //thoughts
-    for (let i = 0; i < sentencesArray.length; i++) {
-        const thoughtText = sentencesArray[i];
-        const username = randomUsernames[i];
-        thoughts.push({
-            thoughtText,
-            username
-        })
-    }
+    const thoughts = sentencesArray.map((thoughtText, index) => {
+        const username = randomUsernames[index];
+        const user = users.find((u) => u.username === username);
+        return {
+          thoughtText,
+          user: user._id, // Associate the thought with the user's _id
+        };
+      });
+    await Thought.collection.insertMany(thoughts);
 
     // insert into db
-    await User.collection.insertMany(users);
-    await Thought.collection.insertMany(thoughts);
+    
+    
 
     console.table(users);
     console.table(thoughts);
