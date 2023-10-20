@@ -1,5 +1,6 @@
+const mongoose = require('mongoose');
+const { User, Thought } = require('../models');
 const connection = require('../config/connection');
-const { User, THought } = require('../models');
 
 
 const randomUsernames = [
@@ -58,6 +59,31 @@ const sentencesArray = [
     "Xylophones produce melodic sounds.",
     "Yogurt is a healthy dairy product.",
     "Zebras have distinctive black and white stripes."
- ];
+];
+
+connection.on('error', (err) => err);
+
+connection.once('open', async () => {
+    console.log('connected...');
+
+    let userCheck = await connection.db.listCollections({ name: 'Users'}).toArray();
+
+    const users = [];
+
+    for (let i = 0; i < randomUsernames.length; i++) {
+        const username = randomUsernames[i];
+        const email = `${randomUsernames[i]}@example.com`;
+        users.push({
+            username,
+            email
+        })
+    }
+
+    await User.collection.insertMany(users);
+
+    console.table(users);
+    console.info('Seeding complete!');
+    process.exit(0);
+})
 
   
