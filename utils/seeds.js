@@ -66,7 +66,14 @@ connection.on('error', (err) => err);
 connection.once('open', async () => {
     console.log('connected...');
 
-    let userCheck = await connection.db.listCollections({ name: 'Users'}).toArray();
+
+    // Drop the existing "Users" collection
+  try {
+    await User.collection.drop();
+    console.log('Dropped the "Users" collection.');
+  } catch (error) {
+    console.error('Error dropping "Users" collection:', error);
+  }
 
     const users = [];
 
