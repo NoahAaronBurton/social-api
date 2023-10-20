@@ -67,16 +67,21 @@ connection.once('open', async () => {
     console.log('connected...');
 
 
-    // Drop the existing "Users" collection
+    // Drop the existing collections
   try {
     await User.collection.drop();
+    await Thought.collection.drop();
     console.log('Dropped the "Users" collection.');
+    console.log('Dropped the "Thoughts" collection.')
   } catch (error) {
-    console.error('Error dropping "Users" collection:', error);
+    console.error('Error dropping collection:', error);
   }
 
+  // new array to hold insertion values
     const users = [];
+    const thoughts = [];
 
+  //users
     for (let i = 0; i < randomUsernames.length; i++) {
         const username = randomUsernames[i];
         const email = `${randomUsernames[i]}@example.com`;
@@ -86,9 +91,22 @@ connection.once('open', async () => {
         })
     }
 
+    //thoughts
+    for (let i = 0; i < sentencesArray.length; i++) {
+        const thoughtText = sentencesArray[i];
+        const username = randomUsernames[i];
+        thoughts.push({
+            thoughtText,
+            username
+        })
+    }
+
+    // insert into db
     await User.collection.insertMany(users);
+    await Thought.collection.insertMany(thoughts);
 
     console.table(users);
+    console.table(thoughts);
     console.info('Seeding complete!');
     process.exit(0);
 })
