@@ -23,6 +23,16 @@ async function getOneThought(req,res) {
     } catch (err) {
         res.status(500).json(err);
     }
+};
+
+async function createThought (req,res) {
+    try {
+        const newThought = await Thought.create(req.body);
+
+        res.json(newThought)
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 }
 
-module.exports = {getThoughts, getOneThought};
+module.exports = {getThoughts, getOneThought, createThought};
