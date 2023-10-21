@@ -35,4 +35,22 @@ async function createThought (req,res) {
     }
 }
 
-module.exports = {getThoughts, getOneThought, createThought};
+async function updateThought (req, res) {
+    try {
+        const targetThought = await Thought.findOneAndUpdate(
+            { _id: req.params.thoughtId},
+            {$set: req.body},
+            {runValidators: true, new: true}
+        );
+
+        if (!targetThought) {
+            return res.status(404).json({message : 'No thoughts with that Id...'});
+        }
+
+        res.json(targetThought);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+module.exports = {getThoughts, getOneThought, createThought, updateThought};
