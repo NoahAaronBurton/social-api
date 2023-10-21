@@ -25,9 +25,18 @@ async function getOneUser(req,res) {
     } catch (err) {
         res.status(500).json(err);
     }
-}
+};
+
+async function createUser (req, res) {
+    try {
+        const newUser = await User.create(req.body);
+        res.json(newUser);
+    } catch (err) {
+       return res.status(500).json(err);
+    }
+};
 
 
 
 
-module.exports= {getUsers, getOneUser};
+module.exports= {getUsers, getOneUser, createUser};
