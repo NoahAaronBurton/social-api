@@ -36,7 +36,24 @@ async function createUser (req, res) {
     }
 };
 
+async function updateUser (req,res) {
+    try {
+        const targetUser = await User.findOneAndUpdate(
+            {_id: req.params.userId},
+            {$set: req.body},
+            { runValidators: true, new: true }
+        );
+
+        if (!targetUser) {
+            res.status(404).json({ message: 'No User with that Id....'});
+        }
+
+        res.json(targetUser);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
 
 
 
-module.exports= {getUsers, getOneUser, createUser};
+module.exports= {getUsers, getOneUser, createUser, updateUser};
