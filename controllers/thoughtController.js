@@ -51,6 +51,22 @@ async function updateThought (req, res) {
     } catch (err) {
         res.status(500).json(err);
     }
+};
+
+async function deleteThought (req,res) {
+    try {
+        const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId});
+
+        if (!thought) {
+            return res.status(404).json({message : 'No thoughts with that Id...'});
+        }
+
+        //todo: delete from other documents
+
+        res.json({ message: `Thought with Id ${thought._id} deleted!`});
+    } catch (err) {
+        res.status(500).json(err);
+    }
 }
 
-module.exports = {getThoughts, getOneThought, createThought, updateThought};
+module.exports = {getThoughts, getOneThought, createThought, updateThought, deleteThought};
