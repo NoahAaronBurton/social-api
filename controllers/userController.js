@@ -96,16 +96,12 @@ async function addFriend (req,res) {
             return res.status(404).json({message: 'Cant find friend: No User with that Id....'})
         }
 
-
-        
-
-
-       
         res.json(user);
     } catch (err) {
         res.status(500).json(err);
     }
-}
+};
+
 
 
 

@@ -21,7 +21,7 @@ router.route('/:userId') //? is this where req.params.userId  is defined?
     .delete(deleteUser);
 
 
-// api/:userId/friends
+// api/users/:userId/friends
 router.route('/:userId/friends').post(addFriend);
 
 module.exports = router;
