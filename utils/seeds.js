@@ -77,33 +77,48 @@ connection.once('open', async () => {
     console.error('Error dropping collection:', error);
   }
 
-  // new array to hold insertion values
-    // const users = [];
-    // const thoughts = [];
 
-  //users
+  //users, chat GPT helped with the next two functions
   const users = randomUsernames.map((username) => {
     return {
       username,
       email: `${username}@example.com`,
+      thoughts: [],
     };
   });
+
   await User.collection.insertMany(users);
 
-    //thoughts
-    const thoughts = sentencesArray.map((thoughtText, index) => {
-        const username = randomUsernames[index];
-        const user = users.find((u) => u.username === username);
-        return {
-          thoughtText,
-          user: user._id, // Associate the thought with the user's _id
-        };
+  //thoughts
+  const thoughts = sentencesArray.map((thoughtText, index) => {
+      const username = randomUsernames[index];
+      const user = users.find((u) => u.username === username);
+      
+      const thought = new Thought({
+        thoughtText,
+        user: user._id,
       });
-    await Thought.collection.insertMany(thoughts);
 
-    // insert into db
-    
-    
+    user.thoughts.push(thought._id);
+
+    return thought;
+
+  });
+      
+      await Thought.collection.insertMany(thoughts);
+
+      // Update the users with their thoughts array
+    await User.collection.updateMany(
+      {},
+      { $set: { thoughts: [] } }, // Clear the thoughts array first
+    );
+    for (const user of users) {
+      await User.collection.updateOne(
+          { _id: user._id },
+          { $set: { thoughts: user.thoughts } },
+        );
+      }
+
 
     console.table(users);
     console.table(thoughts);

@@ -2,7 +2,8 @@ const Thought = require('../models/Thought');
 
 async function getThoughts (req, res) {
     try {
-        const thoughts = await Thought.find();
+        const thoughts = await Thought.find()
+        .populate({ path: 'user', select: '-__v'})
 
         res.json(thoughts);
     } catch (err) {

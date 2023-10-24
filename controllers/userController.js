@@ -3,9 +3,7 @@ const User = require('../models/User');
 async function getUsers(req, res) {
     try {
         const users = await User.find()
-        // .select('-__v')
-        // todo: get thoughts to populate
-        // .populate('thoughts'); //* The parameter passed to .populate() should match the field name in your user schema that you want to populate
+       .populate({ path: 'thoughts', select: '-__v' }) //* The parameter passed to .populate() should match the field name in your user schema that you want to populate
 
         res.json(users);
     } catch (err) {
@@ -15,7 +13,8 @@ async function getUsers(req, res) {
 
 async function getOneUser(req,res) {
     try {
-        const user = await User.findOne({ _id: req.params.userId });
+        const user = await User.findOne({ _id: req.params.userId })
+        .populate({ path: 'thoughts', select: '-__v' });
 
         if (!user) {
             return res.status(404).json({ message: 'No User with that Id....' });

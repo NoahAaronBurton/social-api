@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 
+//* There are two primary ways to create associations:
+
+//* Embedding Documents (Subdocuments): In this approach, you nest one document within another.
+//* Referencing Documents: In this approach, you create a reference from one document to another using an identifier like _id. 
+
+
+
 //todo: finish user model
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true, trim: true},
@@ -8,6 +15,12 @@ const userSchema = new mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Thought',
+        }
+    ],
+    friends: [
+        {
+            // Array of _id values referencing the User model (self-reference)
+
         }
     ]
 
