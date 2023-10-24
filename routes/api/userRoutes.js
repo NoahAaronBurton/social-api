@@ -6,6 +6,7 @@ const {
     createUser,
     updateUser,
     deleteUser,
+    addFriend
 } = require('../../controllers/userController');
 
 // /api/users
@@ -19,5 +20,8 @@ router.route('/:userId') //? is this where req.params.userId  is defined?
     .put(updateUser)
     .delete(deleteUser);
 
+
+// api/:userId/friends
+router.route('/:userId/friends').post(addFriend);
 
 module.exports = router;

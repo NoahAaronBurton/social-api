@@ -65,8 +65,48 @@ async function deleteUser (req,res) {
     } catch (err) {
         res.status(500).json(err);
     }
+};
+
+async function addFriend (req,res) {
+    try {
+        const userId = req.params.userId;
+        const friendId = req.body.friendId;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'error finding User: No User with that id....'})
+        }
+
+        // Chat GPT helped with this check
+        if (user.friends.includes(friendId)) {
+        return res.status(400).json({ message: 'Friend already added.' });
+        }
+
+        user.friends.push(friendId);
+        await user.save();
+
+        const friend = await User.findByIdAndUpdate(
+            {_id: friendId},
+            {$addToSet: {friends: userId}},
+            { runValidators: true, new: true}
+        );
+
+        if (!friend) {
+            return res.status(404).json({message: 'Cant find friend: No User with that Id....'})
+        }
+
+
+        
+
+
+       
+        res.json(user);
+    } catch (err) {
+        res.status(500).json(err);
+    }
 }
 
 
 
-module.exports= {getUsers, getOneUser, createUser, updateUser, deleteUser};
+module.exports= {getUsers, getOneUser, createUser, updateUser, deleteUser, addFriend};
